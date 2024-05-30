@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { envFile } from './config';
@@ -22,10 +22,11 @@ private ListSign: string[]=[
     'aquarius',
     'pisces'
   ]
-  @Cron('10 * * * * *')
+  @Cron(CronExpression.EVERY_DAY_AT_4AM)
   async getHello() {
     const token = envFile.token;
     const bot = new TelegramBot(token, { polling: false });
+    bot.sendMessage(envFile.chatId, 'ДОБРОЕ УТРО!!! За ночь был подготовлен свежий гороскоп для многоуважаемых РЫбят 😘');
     for (const sign of this.ListSign) {
       const message = await this.getTodayHoroscope(sign);
       //0 = chatId
