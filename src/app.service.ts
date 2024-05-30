@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { envFile } from './config';
 
 const TelegramBot = require('node-telegram-bot-api');
 
@@ -23,12 +24,12 @@ private ListSign: string[]=[
   ]
   @Cron('10 * * * * *')
   async getHello() {
-    const token = '';
+    const token = envFile.token;
     const bot = new TelegramBot(token, { polling: false });
     for (const sign of this.ListSign) {
       const message = await this.getTodayHoroscope(sign);
       //0 = chatId
-      bot.sendMessage(0, message);
+      bot.sendMessage(envFile.chatId, message);
     }
 
 
